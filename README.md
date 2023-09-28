@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>FeiShu X</h1>
-  <p>FeiShu's Awesome Extension library</p>
+  <h1>FeiShu Doc X</h1>
+  <p>FeiShu Doc's Awesome Extension library</p>
   <a href="http://makeapullrequest.com">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome">
   </a>
