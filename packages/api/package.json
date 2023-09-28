@@ -1,0 +1,33 @@
+{
+  "name": "@feishux/api",
+  "version": "0.0.1",
+  "description": "FeiShu API",
+  "keywords": [
+    "feishu",
+    "blog",
+    "elog"
+  ],
+  "homepage": "https://github.com/feishu-x/feishu-doc-x",
+  "author": "1874 <me@mail.1874.cool>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feishu-x/feishu-doc-x.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feishu-x/feishu-doc-x/issues"
+  },
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "echo '打包'"
+  },
+  "dependencies": {
+    "@feishux/shared": "workspace:*"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@feishux/doc-to-md",
+  "version": "0.0.1",
+  "description": "FeiShu doc to md",
+  "keywords": [
+    "feishu",
+    "blog",
+    "elog"
+  ],
+  "homepage": "https://github.com/feishu-x/feishu-doc-x",
+  "author": "1874 <me@mail.1874.cool>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feishu-x/feishu-doc-x.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feishu-x/feishu-doc-x/issues"
+  },
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist && tsup --legacy-output"
+  },
+  "dependencies": {
+    "markdown-table": "^2.0.0",
+    "@feishux/api": "workspace:*",
+    "@feishux/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/markdown-table": "^2.0.0"
+  }
+}
