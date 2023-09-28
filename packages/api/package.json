@@ -1,6 +1,6 @@
 {
   "name": "@feishux/api",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "FeiShu API",
   "keywords": [
     "feishu",
@@ -22,10 +22,9 @@
     "url": "https://github.com/feishu-x/feishu-doc-x/issues"
   },
   "main": "dist/index.js",
-  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "echo '打包'"
+    "build": "rimraf dist && rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {
     "@feishux/shared": "workspace:*"

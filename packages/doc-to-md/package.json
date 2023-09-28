@@ -1,6 +1,6 @@
 {
   "name": "@feishux/doc-to-md",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "FeiShu doc to md",
   "keywords": [
     "feishu",
@@ -25,7 +25,7 @@
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsup --legacy-output"
+    "build": "rimraf dist && rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {
     "markdown-table": "^2.0.0",

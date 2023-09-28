@@ -1,6 +1,6 @@
 {
   "name": "@feishux/shared",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "FeiShu Shared Library",
   "keywords": [
     "feishu",
@@ -22,16 +22,16 @@
     "url": "https://github.com/feishu-x/feishu-doc-x/issues"
   },
   "main": "dist/index.js",
-  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsup --legacy-output"
+    "build": "rimraf dist && rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {
     "urllib": "^3.13.2",
     "chalk": "^4.1.2",
     "lodash": "^4.17.21",
-    "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5",
+    "tslib": "^2.4.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
