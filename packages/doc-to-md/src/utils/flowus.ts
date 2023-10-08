@@ -1,0 +1,285 @@
+import {
+  addTabSpace,
+  bold,
+  bullet,
+  codeBlock,
+  divider,
+  // equation,
+  heading,
+  image,
+  inlineCode,
+  inlineEquation,
+  italic,
+  link,
+  quote,
+  strikethrough,
+  // table,
+  todo,
+  // toggle,
+  underline,
+} from './md'
+// import { Transform, TransformPrams } from '../types'
+import {
+  IBlock,
+  IBlockType,
+  IBlockTypeText,
+  out,
+  ICodeStyle,
+  codeLanguageMap,
+} from '@feishux/shared'
+import { Transform, TransformPrams } from '../types'
+import { ITODOStyle } from '@feishux/shared/dist'
+
+export const _unsupported = (type: IBlockType) => {
+  return ({ pageTitle }: TransformPrams) => {
+    out.debug(`【${pageTitle}】存在暂不支持的块类型: ${IBlockTypeText[type]}`)
+    return ''
+  }
+}
+
+/**
+ * 文字
+ * @param block
+ * @param pageTitle
+ */
+export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
+  let str = ''
+  block.text?.elements?.forEach((item) => {
+    if (item.text_run) {
+      const textRun = item.text_run
+      const textstyle = textRun.text_element_style
+      // 文字
+      if (textstyle.bold) {
+        // 加粗
+        str += bold(textRun.content)
+      } else if (textstyle.underline) {
+        // 下划线
+        str += underline(textRun.content)
+      } else if (textstyle.italic) {
+        // 斜体
+        str += italic(textRun.content)
+      } else if (textstyle.strikethrough) {
+        // 删除线
+        str += strikethrough(textRun.content)
+      } else if (textstyle.inline_code) {
+        // 行内代码
+        str += inlineCode(textRun.content)
+      } else {
+        str += textRun.content
+      }
+    } else if (item.equation) {
+      // 行内公式
+      str += inlineEquation(item.equation.content)
+    } else if (item.reminder) {
+      // 日期提醒
+      out.debug(`【${pageTitle}】存在暂不支持的块类型: 日期提醒`)
+    } else {
+      out.debug(`【${pageTitle}】存在暂不支持的块类型，已忽略`)
+    }
+  })
+  return str
+}
+
+/**
+ * 待办事项
+ * @param block
+ */
+export const getTodoValue = ({ block }: TransformPrams) => {
+  const todoStr = block.todo!.elements[0].text_run.content
+  return todo(todoStr, (block.todo!.style as ITODOStyle).done)
+}
+
+/**
+ * 无序列表
+ * @param block
+ * @param blocks
+ * @param pageTitle
+ */
+export const getBulletValue = ({ block, blocks, pageTitle }: TransformPrams) => {
+  let childrenStr = '\n'
+  const childrenIds = block.children
+  childrenIds?.forEach((id) => {
+    const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+    childrenStr += addTabSpace(
+      transform[childBlock.block_type]({ block: childBlock, blocks, pageTitle }),
+      1,
+    )
+  })
+  return bullet(block.bullet!.elements[0].text_run.content) + childrenStr
+}
+
+/**
+ * 有序列表
+ * @param block
+ * @param blocks
+ * @param pageTitle
+ */
+export const getOrderedValue = ({ block, blocks, pageTitle }: TransformPrams) => {
+  let childrenStr = '\n'
+  const childrenIds = block.children
+  childrenIds?.forEach((id) => {
+    const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+    childrenStr += addTabSpace(
+      transform[childBlock.block_type]({ block: childBlock, blocks, pageTitle }),
+      1,
+    )
+  })
+  return bullet(block.ordered!.elements[0].text_run.content, 1) + childrenStr
+}
+
+/**
+ * 标题
+ * @param level
+ */
+export const getTitleValue = (level: number) => {
+  return ({ block }: TransformPrams) => {
+    const key = `heading${level}` as string
+    // @ts-ignore
+    return heading(block[key], level)
+  }
+}
+
+/**
+ * 分割线
+ */
+export const getDividingValue = () => {
+  return divider()
+}
+
+/**
+ * 引用
+ * @param block
+ * @param blocks
+ */
+export const getQuoteValue = ({ block, blocks }: TransformPrams) => {
+  const str = block.children
+    ?.map((id) => {
+      const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+      return childBlock.text!.elements[0].text_run.content
+    })
+    .join('') as string
+  return quote(str)
+}
+
+// /**
+//  * 着重文字
+//  * @param block
+//  */
+// export const getEmphasisTextValue = ({ block }: TransformPrams) => {
+//   // let text = block.callout
+//   if (block.data.icon.type === 'emoji') {
+//     text = block.data.icon.value + ' ' + text
+//   }
+//   return quote(text)
+// }
+
+/**
+ * 媒体
+ * @param block
+ */
+export const getMediaValue = ({ block }: TransformPrams) => {
+  const prefix =
+    'https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/'
+  if (block.image) {
+    return image('', `${prefix}${block.image.token}`)
+  } else if (block.file) {
+    return link(block.file.name, `${prefix}${block.file.token}`)
+  }
+  return ''
+}
+
+/**
+ * 代码块
+ * @param block
+ */
+export const getCodeValue = ({ block }: TransformPrams) => {
+  const code = block.code!
+
+  // @ts-ignore
+  const language = codeLanguageMap[(code.style as ICodeStyle).language]
+  const text = code.elements
+    .map((item) => {
+      return item.text_run.content
+    })
+    .join('')
+
+  return codeBlock(text, language)
+}
+//
+// /**
+//  * 表格
+//  * @param block
+//  * @param blocks
+//  */
+// export const getTableValue = ({ block, blocks }: TransformPrams) => {
+//   // 找到table，然后找到行，然后按照行来渲染
+//   // 列顺序items
+//   const columns = block.data.format.tableBlockColumnOrder
+//   // 二维行数组
+//   const cells: string[][] = []
+//   block.subNodes.forEach((subNode) => {
+//     // 行数组
+//     const cellString: string[] = []
+//     const columnObj = blocks[subNode].data.collectionProperties!
+//     if (columnObj) {
+//       Object.keys(columnObj).forEach((columnkey) => {
+//         columns.forEach((column) => {
+//           if (columnkey === column) {
+//             const cell = columnObj[columnkey][0].text!
+//             cellString.push(cell)
+//           }
+//         })
+//       })
+//       // 生成二维行数组
+//       cells.push(cellString)
+//     }
+//   })
+//   // 转Table
+//   return '\n' + table(cells) + '\n'
+// }
+
+export const transform: Transform = {
+  [IBlockType.page]: _unsupported(IBlockType.page),
+  [IBlockType.text]: getTextValue,
+  // [IBlockType.Toggle]: getToggleValue,
+  [IBlockType.heading1]: getTitleValue(1),
+  [IBlockType.heading2]: getTitleValue(2),
+  [IBlockType.heading3]: getTitleValue(3),
+  [IBlockType.heading4]: getTitleValue(4),
+  [IBlockType.heading5]: getTitleValue(5),
+  [IBlockType.heading6]: getTitleValue(6),
+  [IBlockType.heading7]: getTitleValue(7),
+  [IBlockType.heading8]: getTitleValue(8),
+  [IBlockType.heading9]: getTitleValue(9),
+  [IBlockType.bullet]: getBulletValue,
+  [IBlockType.ordered]: getOrderedValue,
+  [IBlockType.code]: getCodeValue,
+  [IBlockType.quote]: getQuoteValue,
+  [IBlockType.quote_container]: getQuoteValue,
+  [IBlockType.todo]: getTodoValue,
+  // 表格
+  [IBlockType.bitable]: _unsupported(IBlockType.bitable),
+  [IBlockType.callout]: getQuoteValue,
+  [IBlockType.chat_card]: _unsupported(IBlockType.chat_card),
+  [IBlockType.diagram]: _unsupported(IBlockType.diagram),
+  [IBlockType.divider]: getDividingValue,
+  [IBlockType.file]: getMediaValue,
+  [IBlockType.grid]: _unsupported(IBlockType.grid),
+  [IBlockType.grid_column]: _unsupported(IBlockType.grid_column),
+  [IBlockType.iframe]: _unsupported(IBlockType.iframe),
+  [IBlockType.image]: getMediaValue,
+  [IBlockType.isv]: _unsupported(IBlockType.isv),
+  [IBlockType.mindnote]: _unsupported(IBlockType.mindnote),
+  [IBlockType.sheet]: _unsupported(IBlockType.sheet),
+  [IBlockType.table]: _unsupported(IBlockType.table),
+  [IBlockType.table_cell]: _unsupported(IBlockType.table_cell),
+  [IBlockType.view]: _unsupported(IBlockType.view),
+  [IBlockType.task]: _unsupported(IBlockType.task),
+  [IBlockType.okr]: _unsupported(IBlockType.okr),
+  [IBlockType.okr_objective]: _unsupported(IBlockType.okr),
+  [IBlockType.okr_key_result]: _unsupported(IBlockType.okr),
+  [IBlockType.okr_progress]: _unsupported(IBlockType.okr),
+  [IBlockType.add_ons]: _unsupported(IBlockType.add_ons),
+  [IBlockType.jira_issue]: _unsupported(IBlockType.jira_issue),
+  [IBlockType.wiki_catalog]: _unsupported(IBlockType.wiki_catalog),
+}

@@ -26,13 +26,12 @@ export default [
       preserveModulesRoot: 'src',
       sourcemap: true,
     },
-    external: [],
     plugins: [
       ...getBasePlugins({
         outDir: 'dist',
         declaration: true,
-        filterRoot: 'src',
       }),
     ],
+    cache: false,
   },
 ]
