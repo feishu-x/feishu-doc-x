@@ -1,5 +1,14 @@
 # @feishux/doc-to-md
 
+## 0.1.0-beta.2
+
+### Patch Changes
+
+- 新增 folder 类型
+- Updated dependencies
+  - @feishux/api@0.1.0-beta.2
+  - @feishux/shared@0.1.0-beta.2
+
 ## 0.1.0-beta.1
 
 ### Patch Changes

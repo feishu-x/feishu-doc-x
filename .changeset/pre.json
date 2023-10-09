@@ -8,6 +8,7 @@
     "@feishux/shared": "0.0.0"
   },
   "changesets": [
+    "chatty-lemons-add",
     "cuddly-cars-suffer",
     "gold-pigs-repeat"
   ]
