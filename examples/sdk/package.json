@@ -7,6 +7,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "private": true,
   "dependencies": {
     "@feishux/api": "workspace:*",
     "@feishux/doc-to-md": "workspace:*"
