@@ -7,6 +7,9 @@
     "blog",
     "elog"
   ],
+  "files": [
+    "dist"
+  ],
   "homepage": "https://github.com/feishu-x/feishu-doc-x",
   "author": "1874 <me@mail.1874.cool>",
   "license": "MIT",

@@ -12,8 +12,6 @@ export class FeiShuClient {
   constructor(config: FeiShuConfig) {
     this.config = config
     this.config.baseUrl = config?.baseUrl || 'https://open.feishu.cn/open-apis'
-    this.config.app_id = config.app_id || (process.env.FEISHU_APP_ID as string)
-    this.config.app_secret = config.app_secret || (process.env.FEISHU_APP_SECRET as string)
     if (!this.config.app_id || !this.config.app_secret) {
       out.err('缺少参数', '缺少飞书 应用ID 或 应用密钥')
       process.exit(-1)

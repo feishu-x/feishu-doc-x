@@ -16,7 +16,6 @@ import {
   todo,
   underline,
 } from './md'
-// import { Transform, TransformPrams } from '../types'
 import {
   IBlock,
   IBlockType,
