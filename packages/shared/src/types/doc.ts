@@ -75,6 +75,8 @@ export interface ITableData {
 export interface IFolderData {
   name: string
   parent_token: string
+  created_time: string
+  modified_time: string
   token: string
   type: 'file' | 'shortcut' | 'docx' | 'sheet' | 'folder'
   shortcut_info?: {
