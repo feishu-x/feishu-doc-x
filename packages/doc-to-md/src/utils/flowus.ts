@@ -12,7 +12,7 @@ import {
   link,
   quote,
   strikethrough,
-  // table,
+  table,
   todo,
   underline,
 } from './md'
@@ -26,6 +26,7 @@ import {
   codeLanguageMap,
   IBaseData,
   ITODOStyle,
+  ITableData,
 } from '@feishux/shared'
 import { Transform, TransformPrams } from '../types'
 
@@ -217,38 +218,38 @@ export const getCodeValue = ({ block }: TransformPrams) => {
 
   return codeBlock(text, language)
 }
-//
-// /**
-//  * 表格
-//  * @param block
-//  * @param blocks
-//  */
-// export const getTableValue = ({ block, blocks }: TransformPrams) => {
-//   // 找到table，然后找到行，然后按照行来渲染
-//   // 列顺序items
-//   const columns = block.data.format.tableBlockColumnOrder
-//   // 二维行数组
-//   const cells: string[][] = []
-//   block.subNodes.forEach((subNode) => {
-//     // 行数组
-//     const cellString: string[] = []
-//     const columnObj = blocks[subNode].data.collectionProperties!
-//     if (columnObj) {
-//       Object.keys(columnObj).forEach((columnkey) => {
-//         columns.forEach((column) => {
-//           if (columnkey === column) {
-//             const cell = columnObj[columnkey][0].text!
-//             cellString.push(cell)
-//           }
-//         })
-//       })
-//       // 生成二维行数组
-//       cells.push(cellString)
-//     }
-//   })
-//   // 转Table
-//   return '\n' + table(cells) + '\n'
-// }
+
+/**
+ * 表格
+ * @param block
+ * @param blocks
+ * @param pageTitle
+ */
+export const getTableValue = ({ block, blocks, pageTitle }: TransformPrams) => {
+  const tableProp = block.table as ITableData
+  const tableCells = tableProp.cells
+  // const rowSize = tableProp.property.row_size
+  const columnSize = tableProp.property.column_size
+  // 二维行数组
+  const cells: string[][] = []
+  let cellString: string[] = []
+  tableCells.forEach((cellId, index) => {
+    const cellBlock = blocks.find((item) => item.block_id === cellId) as IBlock
+    let text = ''
+    cellBlock.children?.forEach((id) => {
+      const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+      text += getTextValue({ block: childBlock, blocks, pageTitle })
+    })
+    cellString.push(text)
+    if ((index + 1) % columnSize === 0) {
+      // 生成二维行数组
+      cells.push(cellString)
+      cellString = []
+    }
+  })
+  // 转Table
+  return '\n' + table(cells) + '\n'
+}
 
 export const getChildren = ({ block, blocks, pageTitle }: TransformPrams) => {
   const children = block.children
@@ -282,7 +283,6 @@ export const transform: Transform = {
   [IBlockType.quote]: getQuoteValue,
   [IBlockType.quote_container]: getQuoteValue,
   [IBlockType.todo]: getTodoValue,
-  // 表格
   [IBlockType.bitable]: _unsupported(IBlockType.bitable),
   [IBlockType.callout]: getQuoteValue,
   [IBlockType.chat_card]: _unsupported(IBlockType.chat_card),
@@ -296,7 +296,7 @@ export const transform: Transform = {
   [IBlockType.isv]: _unsupported(IBlockType.isv),
   [IBlockType.mindnote]: _unsupported(IBlockType.mindnote),
   [IBlockType.sheet]: _unsupported(IBlockType.sheet),
-  [IBlockType.table]: _unsupported(IBlockType.table),
+  [IBlockType.table]: getTableValue,
   [IBlockType.table_cell]: _unsupported(IBlockType.table_cell),
   [IBlockType.view]: getChildren,
   [IBlockType.task]: _unsupported(IBlockType.task),

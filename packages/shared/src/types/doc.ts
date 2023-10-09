@@ -56,11 +56,20 @@ export interface IBlock {
   file?: IFileData
   sheet?: ISheetData
   callout?: ICalloutData
+  table?: ITableData
 }
 
 export interface IBaseData {
   elements: Elements[]
   style: IHeadingStyle | ICodeStyle | ITODOStyle
+}
+
+export interface ITableData {
+  cells: string[]
+  property: {
+    column_size: number
+    row_size: number
+  }
 }
 
 export interface IResponseData {
