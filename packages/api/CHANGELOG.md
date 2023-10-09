@@ -1,5 +1,13 @@
 # @feishux/api
 
+## 0.1.0-beta.1
+
+### Patch Changes
+
+- 新增获取文件夹下的清单接口
+- Updated dependencies
+  - @feishux/shared@0.1.0-beta.1
+
 ## 0.1.0-beta.0
 
 ### Minor Changes
