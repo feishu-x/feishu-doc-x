@@ -145,8 +145,11 @@ export const getOrderedValue = ({ block, blocks, pageTitle }: TransformPrams) =>
 export const getTitleValue = (level: number) => {
   return ({ block }: TransformPrams) => {
     const key = `heading${level}` as string
+    let text = ''
     // @ts-ignore
-    const text = (block[key] as IBaseData).elements[0].text_run.content
+    ;(block[key] as IBaseData)?.elements?.forEach((item: any) => {
+      text += item.text_run.content
+    })
     return heading(text, level)
   }
 }
