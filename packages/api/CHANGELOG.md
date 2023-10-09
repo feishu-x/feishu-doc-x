@@ -1,5 +1,13 @@
 # @feishux/api
 
+## 0.1.0-beta.4
+
+### Patch Changes
+
+- 修复生成标题问题
+- Updated dependencies
+  - @feishux/shared@0.1.0-beta.4
+
 ## 0.1.0-beta.3
 
 ### Patch Changes
