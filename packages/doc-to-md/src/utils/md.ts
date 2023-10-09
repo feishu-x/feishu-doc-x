@@ -37,9 +37,7 @@ ${text}
 }
 
 export const equation = (text: string) => {
-  return `$$
-${text}
-$$`
+  return `$$\n${text}$$\n`
 }
 
 export const heading = (text: string, level = 1) => {

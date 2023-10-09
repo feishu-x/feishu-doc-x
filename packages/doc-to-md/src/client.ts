@@ -35,7 +35,12 @@ export class FeiShuToMarkdown {
     const firstBlock = blocks[0]
     if (firstBlock.block_type === IBlockType.page) {
       let prevType = 0
-      const needEnter = [IBlockType.callout, IBlockType.quote, IBlockType.text]
+      const needEnter = [
+        IBlockType.callout,
+        IBlockType.quote,
+        IBlockType.text,
+        IBlockType.quote_container,
+      ]
 
       firstBlock.children?.forEach((blockId) => {
         const block = blocks.find((item) => item.block_id === blockId) as IBlock

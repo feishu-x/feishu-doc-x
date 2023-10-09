@@ -4,18 +4,16 @@ import {
   bullet,
   codeBlock,
   divider,
-  // equation,
+  equation,
   heading,
   image,
   inlineCode,
-  inlineEquation,
   italic,
   link,
   quote,
   strikethrough,
   // table,
   todo,
-  // toggle,
   underline,
 } from './md'
 // import { Transform, TransformPrams } from '../types'
@@ -26,9 +24,10 @@ import {
   out,
   ICodeStyle,
   codeLanguageMap,
+  IBaseData,
+  ITODOStyle,
 } from '@feishux/shared'
 import { Transform, TransformPrams } from '../types'
-import { ITODOStyle } from '@feishux/shared/dist'
 
 export const _unsupported = (type: IBlockType) => {
   return ({ pageTitle }: TransformPrams) => {
@@ -48,28 +47,40 @@ export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
     if (item.text_run) {
       const textRun = item.text_run
       const textstyle = textRun.text_element_style
+      let content = textRun.content
+      if (textstyle.link) {
+        // url 解码
+        content = link(content, decodeURIComponent(textstyle.link.url))
+        str += content
+        // 跳出本次循环
+        return
+      }
       // 文字
       if (textstyle.bold) {
         // 加粗
-        str += bold(textRun.content)
-      } else if (textstyle.underline) {
-        // 下划线
-        str += underline(textRun.content)
-      } else if (textstyle.italic) {
-        // 斜体
-        str += italic(textRun.content)
-      } else if (textstyle.strikethrough) {
-        // 删除线
-        str += strikethrough(textRun.content)
-      } else if (textstyle.inline_code) {
-        // 行内代码
-        str += inlineCode(textRun.content)
-      } else {
-        str += textRun.content
+        content = bold(content)
       }
+      if (textstyle.underline) {
+        // 下划线
+        content = underline(content)
+      }
+      if (textstyle.italic) {
+        // 斜体
+        content = italic(content)
+      }
+      if (textstyle.strikethrough) {
+        // 删除线
+        content = strikethrough(content)
+      }
+      if (textstyle.inline_code) {
+        // 行内代码
+        content = inlineCode(content)
+      }
+      str += content
     } else if (item.equation) {
+      // let content = textRun.content
       // 行内公式
-      str += inlineEquation(item.equation.content)
+      str += equation(item.equation.content)
     } else if (item.reminder) {
       // 日期提醒
       out.debug(`【${pageTitle}】存在暂不支持的块类型: 日期提醒`)
@@ -135,7 +146,8 @@ export const getTitleValue = (level: number) => {
   return ({ block }: TransformPrams) => {
     const key = `heading${level}` as string
     // @ts-ignore
-    return heading(block[key], level)
+    const text = (block[key] as IBaseData).elements[0].text_run.content
+    return heading(text, level)
   }
 }
 
@@ -157,7 +169,7 @@ export const getQuoteValue = ({ block, blocks }: TransformPrams) => {
       const childBlock = blocks.find((item) => item.block_id === id) as IBlock
       return childBlock.text!.elements[0].text_run.content
     })
-    .join('') as string
+    .join('\n') as string
   return quote(str)
 }
 
@@ -181,7 +193,7 @@ export const getMediaValue = ({ block }: TransformPrams) => {
   const prefix =
     'https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/'
   if (block.image) {
-    return image('', `${prefix}${block.image.token}`)
+    return image('image', `${prefix}${block.image.token}`)
   } else if (block.file) {
     return link(block.file.name, `${prefix}${block.file.token}`)
   }
@@ -238,6 +250,19 @@ export const getCodeValue = ({ block }: TransformPrams) => {
 //   return '\n' + table(cells) + '\n'
 // }
 
+export const getChildren = ({ block, blocks, pageTitle }: TransformPrams) => {
+  const children = block.children
+  if (children?.length) {
+    return children
+      .map((id) => {
+        const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+        return transform[childBlock.block_type]({ block: childBlock, blocks, pageTitle })
+      })
+      .join('\n')
+  }
+  return ''
+}
+
 export const transform: Transform = {
   [IBlockType.page]: _unsupported(IBlockType.page),
   [IBlockType.text]: getTextValue,
@@ -273,7 +298,7 @@ export const transform: Transform = {
   [IBlockType.sheet]: _unsupported(IBlockType.sheet),
   [IBlockType.table]: _unsupported(IBlockType.table),
   [IBlockType.table_cell]: _unsupported(IBlockType.table_cell),
-  [IBlockType.view]: _unsupported(IBlockType.view),
+  [IBlockType.view]: getChildren,
   [IBlockType.task]: _unsupported(IBlockType.task),
   [IBlockType.okr]: _unsupported(IBlockType.okr),
   [IBlockType.okr_objective]: _unsupported(IBlockType.okr),

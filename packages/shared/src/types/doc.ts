@@ -95,6 +95,9 @@ export interface TextElementStyle {
   italic: boolean
   strikethrough: boolean
   underline: boolean
+  link: {
+    url: string
+  }
 }
 
 export interface TextRun {
