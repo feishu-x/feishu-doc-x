@@ -7,8 +7,8 @@ process.env.DEBUG = true
 const envPath = path.resolve(process.cwd(), '.env')
 dotenv.config({ override: true, path: envPath })
 const flowUsClient = new FeiShuClient({
-  app_id: process.env.FEISHU_APP_ID,
-  app_secret: process.env.FEISHU_APP_SECRET,
+  appId: process.env.FEISHU_APP_ID,
+  appSecret: process.env.FEISHU_APP_SECRET,
 })
 const flowUsToMd = new FeiShuToMarkdown({ client: flowUsClient })
 const genMd = async () => {
