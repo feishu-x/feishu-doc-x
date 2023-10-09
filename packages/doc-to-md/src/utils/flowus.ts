@@ -173,31 +173,12 @@ export const getQuoteValue = ({ block, blocks }: TransformPrams) => {
   return quote(str)
 }
 
-// /**
-//  * 着重文字
-//  * @param block
-//  */
-// export const getEmphasisTextValue = ({ block }: TransformPrams) => {
-//   // let text = block.callout
-//   if (block.data.icon.type === 'emoji') {
-//     text = block.data.icon.value + ' ' + text
-//   }
-//   return quote(text)
-// }
-
 /**
  * 媒体
  * @param block
  */
 export const getMediaValue = ({ block }: TransformPrams) => {
-  const prefix =
-    'https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/'
-  if (block.image) {
-    return image('image', `${prefix}${block.image.token}`)
-  } else if (block.file) {
-    return link(block.file.name, `${prefix}${block.file.token}`)
-  }
-  return ''
+  return image('image', block.image!.token)
 }
 
 /**
@@ -287,7 +268,7 @@ export const transform: Transform = {
   [IBlockType.chat_card]: _unsupported(IBlockType.chat_card),
   [IBlockType.diagram]: _unsupported(IBlockType.diagram),
   [IBlockType.divider]: getDividingValue,
-  [IBlockType.file]: getMediaValue,
+  [IBlockType.file]: _unsupported(IBlockType.file),
   [IBlockType.grid]: _unsupported(IBlockType.grid),
   [IBlockType.grid_column]: _unsupported(IBlockType.grid_column),
   [IBlockType.iframe]: _unsupported(IBlockType.iframe),

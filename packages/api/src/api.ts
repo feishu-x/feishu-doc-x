@@ -90,9 +90,19 @@ export class FeiShuClient {
   public async getResourceItem(file_token: string) {
     await this.initPromise
     // https://open.feishu.cn/document/server-docs/docs/drive-v1/media/download
-    return this._fetch<Buffer>(`drive/v1/medias/${file_token}/download`, {
+    const url = `${this.config.baseUrl}/drive/v1/medias/${file_token}/download`
+    const res = await request<Buffer>(url, {
       dataType: 'buffer',
+      headers: {
+        Authorization: `Bearer ${this.tenantAccessToken}`,
+      },
     })
+    const type = res.headers['content-type']!.split('/')[1]
+    return {
+      buffer: res.data,
+      type,
+      name: file_token + '.' + type,
+    }
   }
 
   /**
