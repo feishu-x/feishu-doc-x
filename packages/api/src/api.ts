@@ -1,6 +1,13 @@
 import { FeiShuConfig } from './types'
-import { IBlock, IResponseData, out } from '@feishux/shared'
-import { request, RequestOptions } from '@feishux/shared'
+import {
+  IBlock,
+  IFolderData,
+  IResponseData,
+  IResponseFolderData,
+  out,
+  request,
+  RequestOptions,
+} from '@feishux/shared'
 
 /**
  * FeiShu API
@@ -54,9 +61,8 @@ export class FeiShuClient {
   /**
    * 获取页面所有Block
    * @param pageId
-   * @param page_token
    */
-  public async getPageBlocks(pageId: string, page_token?: string) {
+  public async getPageBlocks(pageId: string) {
     await this.initPromise
     // https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/document/list
     const getData = async (pageId: string, page_token?: string, result: IBlock[] = []) => {
@@ -64,6 +70,7 @@ export class FeiShuClient {
         method: 'GET',
         data: {
           page_token,
+          page_size: 200,
         },
       })
       result.push(...res.items)
@@ -72,7 +79,7 @@ export class FeiShuClient {
       }
       return result
     }
-    return getData(pageId, page_token)
+    return getData(pageId)
   }
 
   /**
@@ -86,5 +93,42 @@ export class FeiShuClient {
     return this._fetch<Buffer>(`drive/v1/medias/${file_token}/download`, {
       dataType: 'buffer',
     })
+  }
+
+  /**
+   * 获取文件夹下的文档树
+   * @param folder_token
+   */
+  public async getFolderTree(folder_token: string) {
+    await this.initPromise
+    const getData = async (
+      folder_token: string,
+      page_token?: string,
+      result: IFolderData[] = [],
+    ) => {
+      // https://open.feishu.cn/document/server-docs/docs/drive-v1/folder/list
+      const res = await this._fetch<IResponseFolderData>('drive/v1/files', {
+        method: 'get',
+        data: {
+          page_token,
+          page_size: 200,
+          folder_token,
+        },
+      })
+      result.push(...res.files)
+      if (res.has_more) {
+        await getData(folder_token, res.page_token, result)
+      }
+      return result
+    }
+    const data = await getData(folder_token)
+
+    for (const item of data) {
+      if (item.type === 'folder') {
+        // 重新getData获取文件夹下的文档
+        item.children = await getData(item.token)
+      }
+    }
+    return data
   }
 }

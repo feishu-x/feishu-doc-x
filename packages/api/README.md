@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>FlowUs Client</h1>
-  <p>FeiShu API</p>
+  <h1>FeiShuX</h1>
+  <p>FeiShu Doc API</p>
   <a href="http://makeapullrequest.com">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome">
   </a>

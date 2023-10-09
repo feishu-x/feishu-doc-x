@@ -72,6 +72,24 @@ export interface ITableData {
   }
 }
 
+export interface IFolderData {
+  name: string
+  parent_token: string
+  token: string
+  type: 'file' | 'shortcut' | 'docx' | 'sheet' | 'folder'
+  shortcut_info?: {
+    target_token: string
+    target_type: string
+  }
+  children?: IFolderData[]
+}
+
+export interface IResponseFolderData {
+  has_more: boolean
+  files: IFolderData[]
+  page_token?: string
+}
+
 export interface IResponseData {
   has_more: boolean
   items: IBlock[]
