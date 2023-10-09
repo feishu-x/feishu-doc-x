@@ -1,5 +1,13 @@
 # @feishux/api
 
+## 0.1.0-beta.3
+
+### Patch Changes
+
+- 支持下载飞书图片
+- Updated dependencies
+  - @feishux/shared@0.1.0-beta.3
+
 ## 0.1.0-beta.2
 
 ### Patch Changes
