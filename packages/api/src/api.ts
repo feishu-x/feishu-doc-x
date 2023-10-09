@@ -12,7 +12,7 @@ export class FeiShuClient {
   constructor(config: FeiShuConfig) {
     this.config = config
     this.config.baseUrl = config?.baseUrl || 'https://open.feishu.cn/open-apis'
-    if (!this.config.app_id || !this.config.app_secret) {
+    if (!this.config.appId || !this.config.appSecret) {
       out.err('缺少参数', '缺少飞书 应用ID 或 应用密钥')
       process.exit(-1)
     }
@@ -31,8 +31,8 @@ export class FeiShuClient {
     const url = `${this.config.baseUrl}/auth/v3/tenant_access_token/internal`
     const res = await request<any>(url, {
       data: {
-        app_id: this.config.app_id,
-        app_secret: this.config.app_secret,
+        app_id: this.config.appId,
+        app_secret: this.config.appSecret,
       },
       method: 'post',
     })
@@ -74,24 +74,6 @@ export class FeiShuClient {
     }
     return getData(pageId, page_token)
   }
-
-  // /**
-  //  * 替换所有素材
-  //  * @private
-  //  * @param pageBlocks
-  //  */
-  //
-  // private async replaceResource(pageBlocks: IBlock[]) {
-  //   const images = pageBlocks.map(async (block) => {
-  //     if (block.block_type === IBlockType.image) {
-  //       // 获取图片
-  //       const token = (block.image as IImageData).token
-  //
-  //       const media = await this.getResourceItem(token)
-  //       // 上传到图床
-  //     }
-  //   })
-  // }
 
   /**
    * 获取素材
