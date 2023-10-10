@@ -133,3 +133,4 @@ pnpm-lock.yaml
 .idea
 .rollup.cache
 /examples/sdk/src/feishu-tree.json
+.DS_Store

@@ -1,5 +1,5 @@
 import { transform } from './utils/flowus'
-import { ConfigOptions, FlowUsToMarkdownOptions } from './types'
+import { FlowUsToMarkdownOptions } from './types'
 import { FeiShuClient } from '@feishux/api'
 import { IBlock, IBlockType, IBlockTypeText, out } from '@feishux/shared'
 
@@ -8,14 +8,9 @@ import { IBlock, IBlockType, IBlockTypeText, out } from '@feishux/shared'
  */
 export class FeiShuToMarkdown {
   private readonly feiShuClient?: FeiShuClient
-  private readonly config?: ConfigOptions
 
   constructor(options?: FlowUsToMarkdownOptions) {
     this.feiShuClient = options?.client
-    this.config = options?.config
-    if (this.config) {
-      out.warning('暂不支持此配置', JSON.stringify(this.config))
-    }
   }
 
   public async pageToMarkdown(id: string) {

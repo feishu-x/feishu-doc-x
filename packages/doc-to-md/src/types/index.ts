@@ -11,11 +11,6 @@ export type Transform = {
   [key in IBlockType]: (data: TransformPrams) => string
 }
 
-export interface ConfigOptions {
-  saveChildPage?: boolean
-}
-
 export interface FlowUsToMarkdownOptions {
   client?: FeiShuClient
-  config?: ConfigOptions
 }

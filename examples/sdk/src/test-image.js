@@ -1,7 +1,6 @@
 import { FeiShuClient } from '@feishux/api'
 import path from 'path'
 import * as dotenv from 'dotenv'
-import contentDisposition from 'content-disposition'
 process.env.DEBUG = true
 const envPath = path.resolve(process.cwd(), '.env')
 dotenv.config({ override: true, path: envPath })
