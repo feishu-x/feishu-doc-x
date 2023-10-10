@@ -1,5 +1,26 @@
 # @feishux/api
 
+## 0.1.0
+
+### Minor Changes
+
+- d187a73: feishu 云文档转 md
+- 飞书云文档转 md
+
+### Patch Changes
+
+- 0b1cba8: 修复生成标题问题
+- 20d89c1: 新增 folder 类型
+- 99a68a5: 新增获取文件夹下的清单接口
+- 7e57caf: 支持下载飞书图片
+- Updated dependencies [0b1cba8]
+- Updated dependencies [20d89c1]
+- Updated dependencies [99a68a5]
+- Updated dependencies [d187a73]
+- Updated dependencies [7e57caf]
+- Updated dependencies
+  - @feishux/shared@0.1.0
+
 ## 0.1.0-beta.4
 
 ### Patch Changes
