@@ -20,3 +20,7 @@
     <img src="https://img.shields.io/github/issues-closed/feishu-x/feishu-doc-x" alt="GitHub closed issues">
   </a>
 </div>
+
+## 🌹感谢
+- [飞书 API 文档](https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/document/list)
+- [feishu-backup](https://github.com/dicarne/feishu-backup)
