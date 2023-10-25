@@ -28,6 +28,7 @@ import {
   ITableData,
 } from '@feishux/shared'
 import { Transform, TransformPrams } from '../types'
+import { EMOJIS, getEmojiChar } from './emoji'
 
 export const _unsupported = (type: IBlockType) => {
   return ({ pageTitle }: TransformPrams) => {
@@ -167,13 +168,22 @@ export const getDividingValue = () => {
  * @param blocks
  */
 export const getQuoteValue = ({ block, blocks }: TransformPrams) => {
-  const str = block.children
-    ?.map((id) => {
-      const childBlock = blocks.find((item) => item.block_id === id) as IBlock
-      return childBlock.text!.elements[0].text_run.content
-    })
-    .join('\n') as string
-  return quote(str)
+  if (block.block_type === IBlockType.quote) {
+    const str = block.quote.elements[0].text_run.content
+    return quote(str)
+  } else {
+    const str = block.children
+      ?.map((id, index) => {
+        const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+        if (index === 0 && block.block_type === IBlockType.callout && block.callout?.emoji_id) {
+          const emoji = getEmojiChar(block.callout!.emoji_id as keyof typeof EMOJIS)
+          return emoji + ' ' + childBlock.text!.elements[0].text_run.content
+        }
+        return childBlock.text!.elements[0].text_run.content
+      })
+      .join('\n') as string
+    return quote(str)
+  }
 }
 
 /**

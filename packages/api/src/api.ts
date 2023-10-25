@@ -4,6 +4,7 @@ import {
   IFolderData,
   IResponseData,
   IResponseFolderData,
+  IWikiNode,
   out,
   request,
   RequestOptions,
@@ -66,7 +67,7 @@ export class FeiShuClient {
     await this.initPromise
     // https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/document/list
     const getData = async (pageId: string, page_token?: string, result: IBlock[] = []) => {
-      const res = await this._fetch<IResponseData>(`docx/v1/documents/${pageId}/blocks`, {
+      const res = await this._fetch<IResponseData<IBlock>>(`docx/v1/documents/${pageId}/blocks`, {
         method: 'GET',
         data: {
           page_token,
@@ -140,5 +141,30 @@ export class FeiShuClient {
       }
     }
     return data
+  }
+
+  /**
+   * 获取知识库下的子节点列表
+   * @param spaceId 空间 ID
+   * @param parent_node_token 父级 Node 节点
+   */
+  public async getReposNodes(spaceId: string, parent_node_token?: string) {
+    await this.initPromise
+    const getData = async (page_token?: string, result: IWikiNode[] = []) => {
+      const res = await this._fetch<IResponseData<IWikiNode>>(`wiki/v2/spaces/${spaceId}/nodes`, {
+        method: 'GET',
+        data: {
+          parent_node_token,
+          page_token,
+          page_size: 50,
+        },
+      })
+      result.push(...res.items)
+      if (res.has_more) {
+        await getData(res.page_token, result)
+      }
+      return result
+    }
+    return getData()
   }
 }

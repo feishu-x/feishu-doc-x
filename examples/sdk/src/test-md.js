@@ -12,7 +12,7 @@ const flowUsClient = new FeiShuClient({
 })
 const flowUsToMd = new FeiShuToMarkdown({ client: flowUsClient })
 const genMd = async () => {
-  // const pageBlocks = await flowUsClient.getPageBlocks('279f6935-4103-4d64-9b11-ec588fc0b51b')
+  // const pageBlocks = await flowUsClient.getPageBlocks(process.env.FEISHU_PAGE_ID)
   // const mdString = flowUsToMd.toMarkdownString(pageBlocks)
   const mdString = await flowUsToMd.pageToMarkdown(process.env.FEISHU_PAGE_ID)
 

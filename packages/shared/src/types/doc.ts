@@ -45,6 +45,8 @@ export interface IBlock {
   bullet?: IBaseData
   code?: IBaseData
   // 引用
+  // TODO 类型
+  quote?: any
   quote_container?: any
   text?: IBaseData
   // 分割线
@@ -57,6 +59,27 @@ export interface IBlock {
   sheet?: ISheetData
   callout?: ICalloutData
   table?: ITableData
+}
+
+export interface IWikiNode {
+  space_id: string
+  node_token: string
+  // 文档token
+  obj_token: string
+  obj_type: string
+  parent_node_token: string
+  node_type: string
+  origin_node_token: string
+  origin_space_id: string
+  has_child: boolean
+  title: string
+  obj_create_time: string
+  obj_edit_time: string
+  node_create_time: string
+  creator: string
+  owner: string
+  depth?: number
+  children?: IWikiNode[]
 }
 
 export interface IBaseData {
@@ -92,9 +115,9 @@ export interface IResponseFolderData {
   page_token?: string
 }
 
-export interface IResponseData {
+export interface IResponseData<T> {
   has_more: boolean
-  items: IBlock[]
+  items: T[]
   page_token?: string
 }
 
