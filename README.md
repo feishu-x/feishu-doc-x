@@ -25,3 +25,4 @@
 - [飞书 API 文档](https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/document/list)
 - [feishu-backup](https://github.com/dicarne/feishu-backup)
 - [feishu2md](https://github.com/Wsine/feishu2md)
+- [feishu-pages](https://github.com/longbridgeapp/feishu-pages)
