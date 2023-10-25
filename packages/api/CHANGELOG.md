@@ -1,5 +1,16 @@
 # @feishux/api
 
+## 0.2.0
+
+### Minor Changes
+
+- 1.新增从知识库获取文档 2.修复高亮块转换失败的问题 3.支持高亮块 emoji
+
+### Patch Changes
+
+- Updated dependencies
+  - @feishux/shared@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes
