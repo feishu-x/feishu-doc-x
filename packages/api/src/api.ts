@@ -107,7 +107,7 @@ export class FeiShuClient {
   }
 
   /**
-   * 获取文件夹下的文档树
+   * 获取文件夹下的文档树（Tree 结构）
    * @param folder_token
    */
   public async getFolderTree(folder_token: string) {
@@ -142,6 +142,31 @@ export class FeiShuClient {
   }
 
   /**
+   * 获取文件夹下的文档列表
+   * @param folder_token
+   */
+  public async getFolderList(folder_token: string) {
+    await this.initPromise
+    const getData = async (page_token?: string, result: IFolderData[] = []) => {
+      // https://open.feishu.cn/document/server-docs/docs/drive-v1/folder/list
+      const res = await this._fetch<IResponseFolderData>('drive/v1/files', {
+        method: 'get',
+        data: {
+          page_token,
+          page_size: 200,
+          folder_token,
+        },
+      })
+      result.push(...res.files)
+      if (res.has_more) {
+        await getData(res.page_token, result)
+      }
+      return result
+    }
+    return getData()
+  }
+
+  /**
    * 获取知识库下的子节点列表
    * @param spaceId 空间 ID
    * @param parent_node_token 父级 Node 节点
@@ -160,6 +185,37 @@ export class FeiShuClient {
       result.push(...res.items)
       if (res.has_more) {
         await getData(res.page_token, result)
+      }
+      return result
+    }
+    return getData()
+  }
+
+  /**
+   * 获取知识库下的子节点列表(Tree 结构)
+   * @param spaceId
+   * @param parent_node_token
+   */
+  public async getReposNodesTree(spaceId: string, parent_node_token?: string) {
+    await this.initPromise
+    const getData = async (nodeToken?: string, page_token?: string, result: IWikiNode[] = []) => {
+      const res = await this._fetch<IResponseData<IWikiNode>>(`wiki/v2/spaces/${spaceId}/nodes`, {
+        method: 'GET',
+        data: {
+          parent_node_token: nodeToken,
+          page_token,
+          page_size: 50,
+        },
+      })
+      result.push(...res.items)
+      if (res.has_more) {
+        await getData(parent_node_token, res.page_token, result)
+      }
+      for (const item of result) {
+        if (item.has_child) {
+          // 重新getData获取文件夹下的文档
+          item.children = await getData(item.node_token)
+        }
       }
       return result
     }
