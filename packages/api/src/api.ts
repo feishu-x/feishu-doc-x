@@ -1,4 +1,4 @@
-import { FeiShuConfig } from './types'
+import {FeiShuConfig} from './types'
 import {
   IBlock,
   IFolderData,
@@ -130,17 +130,15 @@ export class FeiShuClient {
       if (res.has_more) {
         await getData(folder_token, res.page_token, result)
       }
+      for (const item of result) {
+        if (item.type === 'folder') {
+          // 重新getData获取文件夹下的文档
+          item.children = await getData(item.token)
+        }
+      }
       return result
     }
-    const data = await getData(folder_token)
-
-    for (const item of data) {
-      if (item.type === 'folder') {
-        // 重新getData获取文件夹下的文档
-        item.children = await getData(item.token)
-      }
-    }
-    return data
+    return getData(folder_token)
   }
 
   /**
