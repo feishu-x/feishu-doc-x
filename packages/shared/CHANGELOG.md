@@ -1,5 +1,11 @@
 # @feishux/shared
 
+## 0.3.0
+
+### Minor Changes
+
+- 1.新增知识库获取文档 api 2.修复空间多层级文件夹文档问题 3.新增知识库 Tree 接口
+
 ## 0.2.0
 
 ### Minor Changes
