@@ -1,4 +1,4 @@
-import {FeiShuConfig} from './types'
+import { FeiShuConfig } from './types'
 import {
   IBlock,
   IFolderData,
