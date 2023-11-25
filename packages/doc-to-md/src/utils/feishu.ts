@@ -37,43 +37,38 @@ export const _unsupported = (type: IBlockType) => {
   }
 }
 
-/**
- * 文字
- * @param block
- * @param pageTitle
- */
-export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
+const getBaseTextValue = (baseData: IBaseData, pageTitle: string) => {
   let str = ''
-  block.text?.elements?.forEach((item) => {
+  baseData.elements?.forEach((item) => {
     if (item.text_run) {
       const textRun = item.text_run
-      const textstyle = textRun.text_element_style
+      const textStyle = textRun.text_element_style
       let content = textRun.content
-      if (textstyle.link) {
+      if (textStyle.link) {
         // url 解码
-        content = link(content, decodeURIComponent(textstyle.link.url))
+        content = link(content, decodeURIComponent(textStyle.link.url))
         str += content
         // 跳出本次循环
         return
       }
       // 文字
-      if (textstyle.bold) {
+      if (textStyle.bold) {
         // 加粗
         content = bold(content)
       }
-      if (textstyle.underline) {
+      if (textStyle.underline) {
         // 下划线
         content = underline(content)
       }
-      if (textstyle.italic) {
+      if (textStyle.italic) {
         // 斜体
         content = italic(content)
       }
-      if (textstyle.strikethrough) {
+      if (textStyle.strikethrough) {
         // 删除线
         content = strikethrough(content)
       }
-      if (textstyle.inline_code) {
+      if (textStyle.inline_code) {
         // 行内代码
         content = inlineCode(content)
       }
@@ -93,11 +88,21 @@ export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
 }
 
 /**
+ * 文字
+ * @param block
+ * @param pageTitle
+ */
+export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
+  return getBaseTextValue(block.text!, pageTitle)
+}
+
+/**
  * 待办事项
  * @param block
+ * @param pageTitle
  */
-export const getTodoValue = ({ block }: TransformPrams) => {
-  const todoStr = block.todo!.elements[0].text_run.content
+export const getTodoValue = ({ block, pageTitle }: TransformPrams) => {
+  const todoStr = getBaseTextValue(block.todo!, pageTitle)
   return todo(todoStr, (block.todo!.style as ITODOStyle).done)
 }
 
@@ -117,7 +122,8 @@ export const getBulletValue = ({ block, blocks, pageTitle }: TransformPrams) => 
       1,
     )
   })
-  return bullet(block.bullet!.elements[0].text_run.content) + childrenStr
+  const bulletStr = getBaseTextValue(block.bullet!, pageTitle)
+  return bullet(bulletStr) + childrenStr
 }
 
 /**
@@ -136,7 +142,8 @@ export const getOrderedValue = ({ block, blocks, pageTitle }: TransformPrams) =>
       1,
     )
   })
-  return bullet(block.ordered!.elements[0].text_run.content, 1) + childrenStr
+  const orderedStr = getBaseTextValue(block.ordered!, pageTitle)
+  return bullet(orderedStr, 1) + childrenStr
 }
 
 /**
@@ -144,14 +151,11 @@ export const getOrderedValue = ({ block, blocks, pageTitle }: TransformPrams) =>
  * @param level
  */
 export const getTitleValue = (level: number) => {
-  return ({ block }: TransformPrams) => {
+  return ({ block, pageTitle }: TransformPrams) => {
     const key = `heading${level}` as string
-    let text = ''
     // @ts-ignore
-    ;(block[key] as IBaseData)?.elements?.forEach((item: any) => {
-      text += item.text_run.content
-    })
-    return heading(text, level)
+    const headingText = getBaseTextValue(block[key] as IBaseData, pageTitle)
+    return heading(headingText, level)
   }
 }
 
@@ -166,20 +170,22 @@ export const getDividingValue = () => {
  * 引用
  * @param block
  * @param blocks
+ * @param pageTitle
  */
-export const getQuoteValue = ({ block, blocks }: TransformPrams) => {
+export const getQuoteValue = ({ block, blocks, pageTitle }: TransformPrams) => {
   if (block.block_type === IBlockType.quote) {
-    const str = block.quote.elements[0].text_run.content
-    return quote(str)
+    const quoteStr = getBaseTextValue(block.quote!, pageTitle)
+    return quote(quoteStr)
   } else {
     const str = block.children
       ?.map((id, index) => {
         const childBlock = blocks.find((item) => item.block_id === id) as IBlock
+        const quoteText = getBaseTextValue(childBlock.text!, pageTitle)
         if (index === 0 && block.block_type === IBlockType.callout && block.callout?.emoji_id) {
           const emoji = getEmojiChar(block.callout!.emoji_id as keyof typeof EMOJIS)
-          return emoji + ' ' + childBlock.text!.elements[0].text_run.content
+          return emoji + ' ' + quoteText
         }
-        return childBlock.text!.elements[0].text_run.content
+        return quoteText
       })
       .join('\n') as string
     return quote(str)

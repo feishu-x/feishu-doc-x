@@ -1,5 +1,13 @@
 # @feishux/api
 
+## 0.3.1
+
+### Patch Changes
+
+- 修复文字缺失问题
+- Updated dependencies
+  - @feishux/shared@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

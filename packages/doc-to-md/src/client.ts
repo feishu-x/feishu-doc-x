@@ -1,4 +1,4 @@
-import { transform } from './utils/flowus'
+import { transform } from './utils/feishu'
 import { FlowUsToMarkdownOptions } from './types'
 import { FeiShuClient } from '@feishux/api'
 import { IBlock, IBlockType, IBlockTypeText, out } from '@feishux/shared'
