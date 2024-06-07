@@ -1,5 +1,11 @@
 # @feishux/shared
 
+## 0.3.2
+
+### Patch Changes
+
+- 修复可能出现的 undefined
+
 ## 0.3.1
 
 ### Patch Changes
