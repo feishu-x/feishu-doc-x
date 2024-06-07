@@ -28,7 +28,7 @@ export const link = (text: string, href: string) => {
   return `[${text}](${href})`
 }
 
-export const codeBlock = (text: string, language?: string) => {
+export const codeBlock = (text?: string, language?: string) => {
   if (language === 'plain text') language = 'text'
 
   return `\`\`\`${language}
@@ -69,7 +69,7 @@ export const todo = (text: string, checked: boolean) => {
   return checked ? `- [x] ${text}` : `- [ ] ${text}`
 }
 
-export const image = (alt: string, href: string) => {
+export const image = (alt: string, href?: string) => {
   return `![${alt}](${href})`
 }
 

@@ -87,7 +87,6 @@ export class FeiShuClient {
    * 获取素材
    * @private
    */
-
   public async getResourceItem(file_token: string) {
     await this.initPromise
     // https://open.feishu.cn/document/server-docs/docs/drive-v1/media/download

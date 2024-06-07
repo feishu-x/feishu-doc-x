@@ -37,9 +37,9 @@ export const _unsupported = (type: IBlockType) => {
   }
 }
 
-const getBaseTextValue = (baseData: IBaseData, pageTitle: string) => {
+const getBaseTextValue = (pageTitle: string, baseData?: IBaseData) => {
   let str = ''
-  baseData.elements?.forEach((item) => {
+  baseData?.elements.forEach((item) => {
     if (item.text_run) {
       const textRun = item.text_run
       const textStyle = textRun.text_element_style
@@ -93,7 +93,7 @@ const getBaseTextValue = (baseData: IBaseData, pageTitle: string) => {
  * @param pageTitle
  */
 export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
-  return getBaseTextValue(block.text!, pageTitle)
+  return getBaseTextValue(pageTitle, block.text)
 }
 
 /**
@@ -102,8 +102,8 @@ export const getTextValue = ({ block, pageTitle }: TransformPrams) => {
  * @param pageTitle
  */
 export const getTodoValue = ({ block, pageTitle }: TransformPrams) => {
-  const todoStr = getBaseTextValue(block.todo!, pageTitle)
-  return todo(todoStr, (block.todo!.style as ITODOStyle).done)
+  const todoStr = getBaseTextValue(pageTitle, block.todo)
+  return todo(todoStr, (block.todo?.style as ITODOStyle)?.done)
 }
 
 /**
@@ -122,7 +122,7 @@ export const getBulletValue = ({ block, blocks, pageTitle }: TransformPrams) => 
       1,
     )
   })
-  const bulletStr = getBaseTextValue(block.bullet!, pageTitle)
+  const bulletStr = getBaseTextValue(pageTitle, block.bullet)
   return bullet(bulletStr) + childrenStr
 }
 
@@ -142,7 +142,7 @@ export const getOrderedValue = ({ block, blocks, pageTitle }: TransformPrams) =>
       1,
     )
   })
-  const orderedStr = getBaseTextValue(block.ordered!, pageTitle)
+  const orderedStr = getBaseTextValue(pageTitle, block.ordered)
   return bullet(orderedStr, 1) + childrenStr
 }
 
@@ -154,7 +154,7 @@ export const getTitleValue = (level: number) => {
   return ({ block, pageTitle }: TransformPrams) => {
     const key = `heading${level}` as string
     // @ts-ignore
-    const headingText = getBaseTextValue(block[key] as IBaseData, pageTitle)
+    const headingText = getBaseTextValue(pageTitle, block[key] as IBaseData)
     return heading(headingText, level)
   }
 }
@@ -174,15 +174,15 @@ export const getDividingValue = () => {
  */
 export const getQuoteValue = ({ block, blocks, pageTitle }: TransformPrams) => {
   if (block.block_type === IBlockType.quote) {
-    const quoteStr = getBaseTextValue(block.quote!, pageTitle)
+    const quoteStr = getBaseTextValue(pageTitle, block.quote)
     return quote(quoteStr)
   } else {
     const str = block.children
       ?.map((id, index) => {
         const childBlock = blocks.find((item) => item.block_id === id) as IBlock
-        const quoteText = getBaseTextValue(childBlock.text!, pageTitle)
+        const quoteText = getBaseTextValue(pageTitle, childBlock.text)
         if (index === 0 && block.block_type === IBlockType.callout && block.callout?.emoji_id) {
-          const emoji = getEmojiChar(block.callout!.emoji_id as keyof typeof EMOJIS)
+          const emoji = getEmojiChar(block.callout?.emoji_id as keyof typeof EMOJIS)
           return emoji + ' ' + quoteText
         }
         return quoteText
@@ -197,7 +197,7 @@ export const getQuoteValue = ({ block, blocks, pageTitle }: TransformPrams) => {
  * @param block
  */
 export const getMediaValue = ({ block }: TransformPrams) => {
-  return image('image', block.image!.token)
+  return image('image', block.image?.token)
 }
 
 /**
@@ -205,11 +205,11 @@ export const getMediaValue = ({ block }: TransformPrams) => {
  * @param block
  */
 export const getCodeValue = ({ block }: TransformPrams) => {
-  const code = block.code!
+  const code = block.code
 
   // @ts-ignore
   const language = codeLanguageMap[(code.style as ICodeStyle).language]
-  const text = code.elements
+  const text = code?.elements
     .map((item) => {
       return item.text_run.content
     })
