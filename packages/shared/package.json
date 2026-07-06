@@ -1,6 +1,6 @@
 {
   "name": "@feishux/shared",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "FeiShu Shared Library",
   "keywords": [
     "feishu",
@@ -13,6 +13,9 @@
   "homepage": "https://github.com/feishu-x/feishu-doc-x",
   "author": "1874 <me@mail.1874.cool>",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.18.1"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -30,7 +33,7 @@
     "build": "rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {
-    "urllib": "^3.13.2",
+    "urllib": "4.9.0",
     "chalk": "^4.1.2",
     "lodash": "^4.17.21",
     "shelljs": "^0.8.5",

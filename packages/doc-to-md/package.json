@@ -1,6 +1,6 @@
 {
   "name": "@feishux/doc-to-md",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "FeiShu doc to md",
   "keywords": [
     "feishu",
@@ -13,6 +13,9 @@
   "homepage": "https://github.com/feishu-x/feishu-doc-x",
   "author": "1874 <me@mail.1874.cool>",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.18.1"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -32,8 +35,8 @@
   },
   "dependencies": {
     "markdown-table": "^2.0.0",
-    "@feishux/api": "workspace:*",
-    "@feishux/shared": "workspace:*"
+    "@feishux/api": "workspace:^",
+    "@feishux/shared": "workspace:^"
   },
   "devDependencies": {
     "@types/markdown-table": "^2.0.0"

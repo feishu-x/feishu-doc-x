@@ -1,6 +1,6 @@
 {
   "name": "@feishux/api",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "FeiShu API",
   "keywords": [
     "feishu",
@@ -13,6 +13,9 @@
   "homepage": "https://github.com/feishu-x/feishu-doc-x",
   "author": "1874 <me@mail.1874.cool>",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.18.1"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -30,6 +33,6 @@
     "build": "rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {
-    "@feishux/shared": "workspace:*"
+    "@feishux/shared": "workspace:^"
   }
 }

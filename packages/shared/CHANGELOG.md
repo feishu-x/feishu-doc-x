@@ -1,5 +1,11 @@
 # @feishux/shared
 
+## 0.4.0
+
+### Minor Changes
+
+- Upgrade the HTTP client stack to urllib 4 and require Node.js 20.18.1 or newer.
+
 ## 0.3.3
 
 ### Patch Changes
